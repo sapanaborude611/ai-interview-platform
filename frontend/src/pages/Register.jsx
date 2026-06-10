@@ -1,7 +1,7 @@
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 
-import { useAuth } from "../context/AuthContext";
+import useAuth from "../hooks/useAuth";
 
 const Register = () => {
   const navigate = useNavigate();
@@ -31,7 +31,12 @@ const Register = () => {
 
       navigate("/dashboard");
     } catch (error) {
-      console.error(error);
+      console.log(error.response?.data);
+
+      alert(
+        error.response?.data?.message ||
+          "Registration failed"
+      );
     }
   };
 

@@ -39,8 +39,15 @@ export const register = async (req, res) => {
     res.status(201).json({
       success: true,
       token: generateToken(user._id),
+      user: {
+        id: user._id,
+        name: user.name,
+        email: user.email,
+      },
     });
   } catch (error) {
+    console.log(error);
+
     res.status(500).json({
       success: false,
       message: error.message,
@@ -79,8 +86,15 @@ export const login = async (req, res) => {
     res.status(200).json({
       success: true,
       token: generateToken(user._id),
+      user: {
+        id: user._id,
+        name: user.name,
+        email: user.email,
+      },
     });
   } catch (error) {
+    console.log(error);
+
     res.status(500).json({
       success: false,
       message: error.message,
@@ -93,4 +107,51 @@ export const getMe = async (req, res) => {
     success: true,
     user: req.user,
   });
+};
+
+export const updateProfile = async (
+  req,
+  res
+) => {
+  try {
+    const {
+      name,
+      targetRole,
+      experience,
+      skills,
+      bio,
+    } = req.body;
+
+    const user = await User.findById(
+      req.user._id
+    );
+
+    if (!user) {
+      return res.status(404).json({
+        success: false,
+        message: "User not found",
+      });
+    }
+
+    user.name = name || user.name;
+    user.targetRole =
+      targetRole || user.targetRole;
+    user.experience =
+      experience ?? user.experience;
+    user.skills =
+      skills || user.skills;
+    user.bio = bio || user.bio;
+
+    await user.save();
+
+    res.status(200).json({
+      success: true,
+      user,
+    });
+  } catch (error) {
+    res.status(500).json({
+      success: false,
+      message: error.message,
+    });
+  }
 };

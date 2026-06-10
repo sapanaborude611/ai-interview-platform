@@ -32,3 +32,22 @@ export const getCurrentUser = async (token) => {
 
   return response.data;
 };
+
+export const updateProfile =
+async (
+  profileData,
+  token
+) => {
+  const response =
+    await axios.put(
+      `${API_URL}/profile`,
+      profileData,
+      {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      }
+    );
+
+  return response.data;
+};
